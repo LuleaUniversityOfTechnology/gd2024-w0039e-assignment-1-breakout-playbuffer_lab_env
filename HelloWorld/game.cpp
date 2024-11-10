@@ -8,6 +8,7 @@ using namespace std;
 
 Paddle playerPaddle;
 
+//Creates the initial instance of the ball object and sets its velocity
 void SpawnBall() 
 {
 	const int objectId = Play::CreateGameObject(ObjectType::TYPE_BALL, { DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2 }, 4, "ball");
@@ -19,7 +20,6 @@ void SpawnBall()
 //Takes one simulation step and renders a single frame of the application
 void StepFrame(float elapsedTime)
 {
-
 	//Returns a vector that contains the object ids for all balls that have been created
 	const vector<int> ballIds = Play::CollectGameObjectIDsByType(TYPE_BALL);
 	const vector<int> brickIds = Play::CollectGameObjectIDsByType(TYPE_BRICK);
@@ -28,6 +28,7 @@ void StepFrame(float elapsedTime)
 	for (int ballId : ballIds)
 	{
 		GameObject& ball = Play::GetGameObject(ballId);
+		//Check for wall collision
 		if (ball.pos.x > DISPLAY_WIDTH || ball.pos.x < 0)
 		{
 			ball.velocity.x *= -1;
@@ -54,6 +55,7 @@ void StepFrame(float elapsedTime)
 		for (int ballId : ballIds)
 		{
 			GameObject& ball = Play::GetGameObject(ballId);
+			//Destroy brick if colliding with ball and reverse ball's velocity
 			if (Play::IsColliding(brick, ball))
 			{
 				Play::DestroyGameObject(brickId);
@@ -62,7 +64,7 @@ void StepFrame(float elapsedTime)
 		}
 	}
 
-	//Draw the paddle
+	//Update and draw the paddle
 	UpdatePaddle(playerPaddle);
 	DrawPaddle(playerPaddle);
 }
@@ -83,7 +85,7 @@ void SetupScene()
 		}	
 	}
 	
-	//initialize paddle position
+	//initialize playerPaddle position and dimensions
 	playerPaddle.xPos = DISPLAY_WIDTH / 2;
 	playerPaddle.yPos = 8;
 	playerPaddle.width = 100;

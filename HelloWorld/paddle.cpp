@@ -3,6 +3,7 @@
 #include "paddle.h"
 using namespace std;
 
+//Takes in a paddle and draws it from its defined variables
 void DrawPaddle(const Paddle& p)
 {
 	Play::Point2f topRight = Play::Point2f(p.xPos + p.width/2, p.yPos + p.height/2);
@@ -10,6 +11,7 @@ void DrawPaddle(const Paddle& p)
 	Play::DrawRect(bottomLeft, topRight, Play::cCyan, true);
 }
 
+//Takes in a paddle and updates its x value based on keyboard input
 void UpdatePaddle(Paddle& p)
 {
 	int keyLeft = Play::KeyDown(Play::KeyboardButton::KEY_LEFT);
@@ -18,6 +20,9 @@ void UpdatePaddle(Paddle& p)
 	p.xPos += 5 * moveDir;
 }
 
+//Checks if the paddle is colliding with a game object
+//takes in a paddle object and a game object
+//returns true if paddle and passed in game object are colliding, else false
 bool IsColliding(const Paddle& p, const Play::GameObject& obj)
 {
 	Play::Point2f topRight = Play::Point2f(p.xPos + p.width / 2, p.yPos + p.height / 2);
@@ -27,11 +32,13 @@ bool IsColliding(const Paddle& p, const Play::GameObject& obj)
 	return (dx * dx + dy * dy) < (obj.radius * obj.radius);
 }
 
+//Takes in two floats and returns the greater of the two using the ternary operator
 float Max(float a, float b)
 {
 	return a > b ? a : b;
 }
 
+//Takes in two floats and returns the lesser of the two using the ternary operator
 float Min(float a, float b)
 {
 	return a < b ? a : b;
