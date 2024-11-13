@@ -1,29 +1,27 @@
-#define PLAY_IMPLEMENTATION
-#define PLAY_USING_GAMEOBJECT_MANAGER
 #include "Play.h"
+#include "game.h"
 
-int DISPLAY_WIDTH = 640;
-int DISPLAY_HEIGHT = 360;
-int DISPLAY_SCALE = 2;
-
-// The entry point for a PlayBuffer program
-void MainGameEntry( PLAY_IGNORE_COMMAND_LINE )
+// Entry point for the game - initializes the game manager and scene
+void MainGameEntry(PLAY_IGNORE_COMMAND_LINE)
 {
-	Play::CreateManager( DISPLAY_WIDTH, DISPLAY_HEIGHT, DISPLAY_SCALE );
+    Play::CreateManager(DISPLAY_WIDTH, DISPLAY_HEIGHT, DISPLAY_SCALE);
+    SetupScene();
+    SpawnBall();
+}
+// Main game loop, called once per frame
+bool MainGameUpdate(float elapsedTime)
+{
+    Play::ClearDrawingBuffer(Play::cBlack);// Clear screen
+
+    StepFrame(elapsedTime); // Update game objects
+
+    Play::PresentDrawingBuffer(); // Render the frame
+    return Play::KeyDown(Play::KeyboardButton::KEY_ESCAPE); // Exit on Escape key
 }
 
-// Called by PlayBuffer every frame (60 times a second!)
-bool MainGameUpdate( float elapsedTime )
+// Cleanup when the game exits
+int MainGameExit(void)
 {
-	Play::ClearDrawingBuffer( Play::cOrange );
-	Play::DrawDebugText( { DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2 }, "Hello World!" );
-	Play::PresentDrawingBuffer();
-	return Play::KeyDown( KEY_ESCAPE );
-}
-
-// Gets called once when the player quits the game 
-int MainGameExit( void )
-{
-	Play::DestroyManager();
-	return PLAY_OK;
+    Play::DestroyManager();
+    return PLAY_OK;
 }
