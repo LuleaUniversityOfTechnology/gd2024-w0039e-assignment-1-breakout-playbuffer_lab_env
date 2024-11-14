@@ -3,6 +3,8 @@
 // The entry point for a PlayBuffer program
 void MainGameEntry( PLAY_IGNORE_COMMAND_LINE )
 {
+	LoadScores();
+	CreateManagers();
 	SetupScene();
 	SpawnBall();
 }
@@ -20,5 +22,6 @@ bool MainGameUpdate( float elapsedTime )
 int MainGameExit( void )
 {
 	Play::DestroyManager();
+	SaveScores();
 	return PLAY_OK;
 }
