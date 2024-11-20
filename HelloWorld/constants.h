@@ -6,8 +6,8 @@ int DISPLAY_SCALE = 2;
 
 float ballSpeed = 5;
 
-int highScoresSize = 0;
-unsigned int* highScores = new unsigned int[highScoresSize];
+int highScoresSize;
+unsigned int* highScores;
 int playerScore = 0;
 
 enum ObjectType 

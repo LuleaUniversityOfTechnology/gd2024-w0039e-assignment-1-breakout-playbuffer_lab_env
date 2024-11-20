@@ -6,6 +6,7 @@
 #include "constants.h"
 #include <fstream>
 #include <array>
+#include <string>
 using namespace std;
 
 Paddle playerPaddle;
@@ -186,11 +187,15 @@ void SaveScores()
 		//for each element in highScores, put it in its own line in the text document
 		for (int i = 0; i < highScoresSize; i++)
 		{
-			highscores << highScores[i] << "\n";
+			highscores << highScores[i];
+			if (i + 1 < highScoresSize)
+			{
+				highscores << "\n";
+			}
 		}
+		highscores.close();
 	}
-	highscores.close();
-	free(highScores);
+	delete[] highScores;
 }
 
 //Reads the file "highscores.txt" and puts each line of the document into the array as its own element
@@ -200,10 +205,27 @@ void LoadScores()
 	highscores.open("highscores.txt");
 	string score;
 	int i = 0;
+	highScoresSize = GetFileLineCount("highscores.txt");
+	highScores = new unsigned int[highScoresSize];
 	while (getline(highscores, score))
 	{
 		highScores[i] = stoi(score);
 		i++;
-		highScoresSize++;
 	}
+	highscores.close();
+}
+
+//Takes in a string filename and returns the number of lines in that text file
+int GetFileLineCount(string fileName)
+{
+	ifstream file;
+	file.open(fileName);
+	int lineCount = 0;
+	string line;
+	while (getline(file, line))
+	{
+		lineCount++;
+	}
+	file.close();
+	return lineCount;
 }

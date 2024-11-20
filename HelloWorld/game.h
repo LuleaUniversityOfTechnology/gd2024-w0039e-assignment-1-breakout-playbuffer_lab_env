@@ -11,6 +11,7 @@ void CreateManagers();
 bool BrickCollision(int brick, Play::GameObject& obj2);
 void SaveScores();
 void LoadScores();
+int GetFileLineCount(std::string fileName);
 
 
 
