@@ -91,13 +91,14 @@ void StepFrame(float elapsedTime)
 	DrawPaddle(playerPaddle);
 
 	//Draw top five high scores at bottom right of screen
-	for (int i = 0; i < highScoresSize; i++)
+	int displayedScores = min(highScoresSize, 5);
+	for (int i = 0; i < displayedScores; i++)
 	{
-		Play::DrawDebugText(Play::Point2D(DISPLAY_WIDTH - 10, 70 - 15*i), to_string(highScores[i]).c_str(), Play::cWhite, true);
+		Play::DrawDebugText(Play::Point2D(DISPLAY_WIDTH - 10, displayedScores*15 - 15*i), to_string(highScores[i]).c_str(), Play::cWhite, true);
 	}
 
 	//Draw player score at bottom left of screen
-	Play::DrawDebugText(Play::Point2D(10, 10), to_string(playerScore).c_str(), Play::cWhite, true);
+	Play::DrawDebugText(Play::Point2D(10, 15), to_string(playerScore).c_str(), Play::cWhite, true);
 }
 
 //Creates all the brick objects
@@ -124,8 +125,18 @@ void SetupScene()
 //Takes in a score and enters it into the top five scores and sorts the array
 void SaveScore(int score)
 {
+	// Reallocate highScores to accommodate for one extra score
+	highScoresSize++;
+	unsigned int * highScoresCopy = new unsigned int[highScoresSize];
+	for (int j = 0; j < highScoresSize - 1; j++)
+	{
+		highScoresCopy[j] = highScores[j];
+	}
+	highScoresCopy[highScoresSize - 1] = 0;
+	highScores = new unsigned int[highScoresSize];
 	for (int i = 0; i < highScoresSize; i++)
 	{
+		highScores[i] = highScoresCopy[i];
 		int curScore = highScores[i];
 		if (score > curScore)
 		{
@@ -134,14 +145,16 @@ void SaveScore(int score)
 			//Re-sort all scores following the new score
 			while (i < highScoresSize)
 			{
-				int nextScore = highScores[i];
+				int nextScore = highScoresCopy[i];
 				highScores[i] = curScore;
 				curScore = nextScore;
 				i++;
 			}
-			break;
+			delete[] highScoresCopy;
+			return;
 		}
 	}
+	delete[] highScoresCopy;
 }
 
 void CreateManagers()
