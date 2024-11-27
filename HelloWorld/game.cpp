@@ -133,6 +133,7 @@ void SaveScore(int score)
 		highScoresCopy[j] = highScores[j];
 	}
 	highScoresCopy[highScoresSize - 1] = 0;
+	delete[] highScores;
 	highScores = new unsigned int[highScoresSize];
 	for (int i = 0; i < highScoresSize; i++)
 	{
